@@ -1,5 +1,8 @@
-FROM scratch
-WORKDIR /go/bin
-COPY .build/tautulli_exporter-linux-amd64 /go/bin/tautulli_exporter
-EXPOSE 9487/tcp
-ENTRYPOINT ["./tautulli_exporter"]
+FROM alpine
+WORKDIR /run
+RUN apk update \
+  && apk upgrade \
+  && apk add wget
+RUN wget "https://github.com/nwalke/tautulli-exporter/releases/download/v0.1.0/tautulli_exporter-linux-amd64" -o /run/exporter
+RUN chmod +x /run/exporter
+ENTRYPOINT ["/run/exporter"]
